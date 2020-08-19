@@ -91,13 +91,15 @@ class ListViewController: UIViewController {
     }
     
     private func setupBindings() {
-        compositeDisposable += viewModel.changeset.producer.startWithValues {[weak self] edit in
+        compositeDisposable += viewModel.changeset.producer.startWithValues {[weak self] edit in // Segundo
             self?.tableView.reload(using: edit, with: UITableView.RowAnimation.fade) {[weak self] (data) in
                 self?.viewModel.setDataSource(sections: data)
             }
         }
+        
+        compositeDisposable += emptyLabel.reactive.isHidden <~ viewModel.sectionsNotEmpty // Tercero
             
-        compositeDisposable += addButton.reactive.controlEvents(.touchUpInside).observe { [weak self] (_) in
+        compositeDisposable += addButton.reactive.controlEvents(.touchUpInside).observe { [weak self] (_) in // Primero
             guard let self = self else { return }
             self.viewModel.addSectionButtonTapped()
         }

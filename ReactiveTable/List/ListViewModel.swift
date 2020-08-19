@@ -15,6 +15,7 @@ typealias SectionType = ArraySection<SectionViewModel, CellViewModel>
 class ListViewModel {
     
     // MARK: - Stored variables
+    let sectionsNotEmpty = MutableProperty<Bool>(false) // Cuarto
     
     let changeset = MutableProperty(StagedChangeset<[SectionType]>()) // Tercero
     
@@ -25,9 +26,15 @@ class ListViewModel {
     // MARK: - Init
     init(compositeDisposable: CompositeDisposable) {
         self.compositeDisposable = compositeDisposable
+        setupBindings()
     }
     
     // MARK: - Methods
+    func setupBindings() {
+        let sectionsArrayIsNotEmpty = sections.map { !$0.isEmpty }
+        sectionsNotEmpty <~ sectionsArrayIsNotEmpty
+    }
+    
     func setDataSource(sections: [SectionType]) {
         self.sections.value = sections
     }
