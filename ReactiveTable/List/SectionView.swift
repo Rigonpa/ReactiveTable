@@ -6,4 +6,8 @@
 //  Copyright © 2020 Ricardo González Pacheco. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class SectionView: UITableViewHeaderFooterView {
+    
+}

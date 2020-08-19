@@ -9,5 +9,6 @@ target 'ReactiveTable' do
   pod 'ReactiveSwift'
   pod 'ReactiveCocoa'
   pod 'DifferenceKit'
+  pod 'SnapKit'
 
 end
