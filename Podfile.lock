@@ -1,0 +1,30 @@
+PODS:
+  - DifferenceKit (1.1.5):
+    - DifferenceKit/Core (= 1.1.5)
+    - DifferenceKit/UIKitExtension (= 1.1.5)
+  - DifferenceKit/Core (1.1.5)
+  - DifferenceKit/UIKitExtension (1.1.5):
+    - DifferenceKit/Core
+  - ReactiveCocoa (11.0.0):
+    - ReactiveSwift (~> 6.2)
+  - ReactiveSwift (6.3.0)
+
+DEPENDENCIES:
+  - DifferenceKit
+  - ReactiveCocoa
+  - ReactiveSwift
+
+SPEC REPOS:
+  trunk:
+    - DifferenceKit
+    - ReactiveCocoa
+    - ReactiveSwift
+
+SPEC CHECKSUMS:
+  DifferenceKit: 516f12e336ed65a3a0665847b5c3cb5cad4bd4ea
+  ReactiveCocoa: 189fcea9c5af7e394dd8a4cfc1c6f77af9ff3598
+  ReactiveSwift: 7937f26ec18d555e2a99352bd0a8b2817d1f042d
+
+PODFILE CHECKSUM: a0182c25cb36c31694fd22ddb257f7cdd91271e5
+
+COCOAPODS: 1.9.3
