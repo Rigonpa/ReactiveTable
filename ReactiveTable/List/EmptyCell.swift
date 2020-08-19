@@ -10,4 +10,9 @@ import UIKit
 
 class EmptyCell: UITableViewCell {
     
+    var viewModel: EmptyCellViewModel? {
+        didSet {
+            contentView.backgroundColor = .orange
+        }
+    }
 }

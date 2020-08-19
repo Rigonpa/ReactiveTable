@@ -8,6 +8,7 @@
 
 import UIKit
 import ReactiveSwift
+import ReactiveCocoa
 import SnapKit
 
 class ListViewController: UIViewController {
@@ -17,8 +18,8 @@ class ListViewController: UIViewController {
         table.register(SectionView.self, forHeaderFooterViewReuseIdentifier: "SectionView")
         table.register(EmptyCell.self, forCellReuseIdentifier: "EmptyCell")
         table.register(SimpleCell.self, forCellReuseIdentifier: "SimpleCell")
-//        table.delegate = self
-//        table.dataSource = self
+        table.delegate = self
+        table.dataSource = self
 //        table.dragDelegate = self
 //        table.dropDelegate = self
         table.tableFooterView = UIView()
@@ -36,14 +37,15 @@ class ListViewController: UIViewController {
     
     lazy var emptyLabel: UILabel = {
         let label = UILabel()
-        label.text = "Tap add button to enter new section"
+        label.text = "Press plus button to add new section to list"
+        label.textAlignment = .center
         return label
     }()
     
-    let disposable: Disposable
+    let disposable: CompositeDisposable
     
     let viewModel: ListViewModel
-    init(viewModel: ListViewModel, disposable: Disposable) {
+    init(viewModel: ListViewModel, disposable: CompositeDisposable) {
         self.viewModel = viewModel
         self.disposable = disposable
         super.init(nibName: nil, bundle: nil)
@@ -53,8 +55,8 @@ class ListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func loadView() {
+        view = UIView()
         view.backgroundColor = .white
         tableView.backgroundColor = .blue
         
@@ -77,7 +79,53 @@ class ListViewController: UIViewController {
         emptyLabel.snp.remakeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
             make.centerY.equalTo(view.snp.centerY)
-            make.size.equalTo(300)
+            make.width.equalTo(view.snp.width)
+            make.height.equalTo(80)
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupBindings()
+    }
+    
+    private func setupBindings() {
+        disposable += addButton.reactive.controlEvents(.touchUpInside).observe { [weak self] (_) in
+            guard let self = self else { return }
+            self.viewModel.addSectionButtonTapped()
+        }
+    }
+}
+
+extension ListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let sectionView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SectionView") as? SectionView,
+            let sectionViewModel = viewModel.sectionViewModel(at: section) else { fatalError()}
+        sectionView.viewModel = sectionViewModel
+        return sectionView
+    }
+}
+
+extension ListViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return viewModel.numberOfSections()
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.numberOfRows(at: section)
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "EmptyCell", for: indexPath) as? EmptyCell {
+            guard let cellViewModel = viewModel.viewModel(at: indexPath) as? EmptyCellViewModel else { fatalError()}
+            cell.viewModel = cellViewModel
+            return cell
+        } else if let cell = tableView.dequeueReusableCell(withIdentifier: "SimpleCell", for: indexPath) as? SimpleCell {
+            guard let cellViewModel = viewModel.viewModel(at: indexPath) as? SimpleCellViewModel else { fatalError()}
+            cell.viewModel = cellViewModel
+            return cell
+        } else {
+            fatalError()
         }
     }
 }

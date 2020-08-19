@@ -10,4 +10,9 @@ import UIKit
 
 class SimpleCell: UITableViewCell {
     
+    var viewModel: SimpleCellViewModel? {
+        didSet {
+            contentView.backgroundColor = .cyan
+        }
+    }
 }
