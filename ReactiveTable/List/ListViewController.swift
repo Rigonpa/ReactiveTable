@@ -10,6 +10,7 @@ import UIKit
 import ReactiveSwift
 import ReactiveCocoa
 import SnapKit
+import DifferenceKit
 
 class ListViewController: UIViewController {
     
@@ -42,12 +43,12 @@ class ListViewController: UIViewController {
         return label
     }()
     
-    let disposable: CompositeDisposable
+    let compositeDisposable: CompositeDisposable
     
     let viewModel: ListViewModel
-    init(viewModel: ListViewModel, disposable: CompositeDisposable) {
+    init(viewModel: ListViewModel, compositeDisposable: CompositeDisposable) {
         self.viewModel = viewModel
-        self.disposable = disposable
+        self.compositeDisposable = compositeDisposable
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -90,7 +91,13 @@ class ListViewController: UIViewController {
     }
     
     private func setupBindings() {
-        disposable += addButton.reactive.controlEvents(.touchUpInside).observe { [weak self] (_) in
+        compositeDisposable += viewModel.changeset.producer.startWithValues {[weak self] edit in
+            self?.tableView.reload(using: edit, with: UITableView.RowAnimation.fade) {[weak self] (data) in
+                self?.viewModel.setDataSource(sections: data)
+            }
+        }
+            
+        compositeDisposable += addButton.reactive.controlEvents(.touchUpInside).observe { [weak self] (_) in
             guard let self = self else { return }
             self.viewModel.addSectionButtonTapped()
         }
@@ -100,9 +107,13 @@ class ListViewController: UIViewController {
 extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let sectionView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SectionView") as? SectionView,
-            let sectionViewModel = viewModel.sectionViewModel(at: section) else { fatalError()}
+            let sectionViewModel = viewModel.sectionViewModel(at: section) else { return nil }
         sectionView.viewModel = sectionViewModel
         return sectionView
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 54.0
     }
 }
 
@@ -116,16 +127,15 @@ extension ListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "EmptyCell", for: indexPath) as? EmptyCell {
-            guard let cellViewModel = viewModel.viewModel(at: indexPath) as? EmptyCellViewModel else { fatalError()}
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "EmptyCell", for: indexPath) as? EmptyCell,
+            let cellViewModel = viewModel.viewModel(at: indexPath) as? EmptyCellViewModel {
             cell.viewModel = cellViewModel
             return cell
-        } else if let cell = tableView.dequeueReusableCell(withIdentifier: "SimpleCell", for: indexPath) as? SimpleCell {
-            guard let cellViewModel = viewModel.viewModel(at: indexPath) as? SimpleCellViewModel else { fatalError()}
+        } else if let cell = tableView.dequeueReusableCell(withIdentifier: "SimpleCell", for: indexPath) as? SimpleCell,
+            let cellViewModel = viewModel.viewModel(at: indexPath) as? SimpleCellViewModel {
             cell.viewModel = cellViewModel
             return cell
-        } else {
-            fatalError()
         }
+        fatalError()
     }
 }

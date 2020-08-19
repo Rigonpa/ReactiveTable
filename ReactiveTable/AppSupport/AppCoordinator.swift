@@ -18,9 +18,9 @@ class AppCoordinator: Coordinator {
     
     override func start() {
         let navigationController = UINavigationController()
-        let disposable = CompositeDisposable()
-        let listViewModel = ListViewModel(disposable: disposable)
-        let listViewController = ListViewController(viewModel: listViewModel, disposable: disposable)
+        let compositeDisposable = CompositeDisposable()
+        let listViewModel = ListViewModel(compositeDisposable: compositeDisposable)
+        let listViewController = ListViewController(viewModel: listViewModel, compositeDisposable: compositeDisposable)
         navigationController.viewControllers = [listViewController]
         
         window.rootViewController = navigationController

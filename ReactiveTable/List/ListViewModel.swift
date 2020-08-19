@@ -15,24 +15,37 @@ typealias SectionType = ArraySection<SectionViewModel, CellViewModel>
 class ListViewModel {
     
     // MARK: - Stored variables
+    
     let changeset = MutableProperty(StagedChangeset<[SectionType]>()) // Tercero
     
     let sections = MutableProperty<[SectionType]>([]) // Segundo
     
-    let disposable: Disposable // Primero
+    let compositeDisposable: CompositeDisposable // Primero
     
     // MARK: - Init
-    init(disposable: Disposable) {
-        self.disposable = disposable
+    init(compositeDisposable: CompositeDisposable) {
+        self.compositeDisposable = compositeDisposable
     }
     
     // MARK: - Methods
+    func setDataSource(sections: [SectionType]) {
+        self.sections.value = sections
+    }
+    
+    func updateChangeset(sections: [SectionType]) {
+        changeset.value = StagedChangeset<[SectionType]>(source: self.sections.value, target: sections)
+    }
+    
     func addSectionButtonTapped(){
-        sections.value.append(SectionType(model: SectionViewModel(), elements: [EmptyCellViewModel()]))
+        var mutableSections = sections.value
+        mutableSections.append(SectionType(model: SectionViewModel(), elements: [EmptyCellViewModel()]))
+        
+        updateChangeset(sections: mutableSections)
     }
     
     // MARK: - TableView methods
     func sectionViewModel(at section: Int) -> SectionViewModel? {
+        guard section < sections.value.count else { return nil }
         return sections.value[section].model
     }
     
@@ -44,7 +57,7 @@ class ListViewModel {
         return sections.value[section].elements.count
     }
     
-    func viewModel(at indexPath: IndexPath) -> CellViewModel? {
+    func viewModel(at indexPath: IndexPath) -> CellViewModel {
         return sections.value[indexPath.section].elements[indexPath.row]
     }
 }
