@@ -19,7 +19,7 @@ typealias SectionType = ArraySection<SectionViewModel, CellViewModel>
 class ListViewModel {
     
     // MARK: - Stored variables
-    var selectedSectionViewModelId: String? // Sexto
+    var selectedSectionViewModel: SectionViewModel? // Sexto
     
     var delegate: ListViewModelDelegate? // Quinto
     
@@ -43,22 +43,18 @@ class ListViewModel {
     }
     
     func addNewSimpleCell() {
-        let sectionIndex = sections.value.firstIndex { (eachSectionAlreadyInSections) -> Bool in
-            eachSectionAlreadyInSections.model.id == selectedSectionViewModelId
-        }
-        guard let sectionIndex1 = sectionIndex else { return }
-        
+        guard let sectionIndex = sections.value.firstIndex (where: { (eachSectionAlreadyInSections) -> Bool in
+            eachSectionAlreadyInSections.model === selectedSectionViewModel
+        }) else { return }
         
         var mutableSectionsCopy = sections.value
         
         let simpleCellViewModel = SimpleCellViewModel()
-        simpleCellViewModel.idLabelText.value = simpleCellViewModel.id
+//        simpleCellViewModel.idLabelText.value = simpleCellViewModel.id
         
-        if(mutableSectionsCopy[sectionIndex1].elements.first is EmptyCellViewModel) {
-            mutableSectionsCopy[sectionIndex1].elements.removeAll()
-        }
+        mutableSectionsCopy[sectionIndex].elements.removeAll(where: { $0 is EmptyCellViewModel })
         
-        mutableSectionsCopy[sectionIndex1].elements.append(simpleCellViewModel)
+        mutableSectionsCopy[sectionIndex].elements.append(simpleCellViewModel)
         
         updateChangeset(sections: mutableSectionsCopy)
         
@@ -107,8 +103,8 @@ class ListViewModel {
 }
 
 extension ListViewModel: SectionViewModelDelegate {
-    func addNewCellButtonTapped(id: String) {
-        selectedSectionViewModelId = id
+    func addNewCellButtonTapped(sectionViewModel: SectionViewModel) {
+        selectedSectionViewModel = sectionViewModel
         self.delegate?.addNewCellToTable()
     }
 }

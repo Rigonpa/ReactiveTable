@@ -30,11 +30,14 @@ class SectionView: UITableViewHeaderFooterView {
         return btn
     }()
     
-    let compositeDisposable = CompositeDisposable()
+    let serialDisposable = SerialDisposable()
     
     var viewModel: SectionViewModel? {
         didSet {
-            setupBindings()
+            let compositeDisposable = CompositeDisposable()
+            serialDisposable.inner = compositeDisposable
+            
+            setupBindings(compositeDisposable: compositeDisposable)
             updateUI()
         }
     }
@@ -48,11 +51,11 @@ class SectionView: UITableViewHeaderFooterView {
 //        fatalError("init(coder:) has not been implemented")
 //    }
     
-    private func setupBindings() {
+    private func setupBindings(compositeDisposable: CompositeDisposable) {
         guard let viewModel = viewModel else { return }
         compositeDisposable += titleSection.reactive.text <~ viewModel.sectionTitle
         
-        compositeDisposable += addCellButton.reactive.controlEvents(.touchUpInside).observe {[weak self] (_) in
+        compositeDisposable += addCellButton.reactive.controlEvents(.touchUpInside).observe{[weak self] (_) in
             self?.viewModel?.addNewCellButtonTapped()
         }
     }
@@ -80,6 +83,6 @@ class SectionView: UITableViewHeaderFooterView {
     }
     
     deinit {
-        compositeDisposable.dispose()
+        serialDisposable.dispose()
     }
 }

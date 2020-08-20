@@ -11,7 +11,7 @@ import DifferenceKit
 import ReactiveSwift
 
 protocol SectionViewModelDelegate {
-    func addNewCellButtonTapped(id: String)
+    func addNewCellButtonTapped(sectionViewModel: SectionViewModel)
 }
 
 class SectionViewModel {
@@ -23,7 +23,7 @@ class SectionViewModel {
     let id = UUID().uuidString
     
     func addNewCellButtonTapped() {
-        self.delegate?.addNewCellButtonTapped(id: id)
+        self.delegate?.addNewCellButtonTapped(sectionViewModel: self)
     }
     
 }
