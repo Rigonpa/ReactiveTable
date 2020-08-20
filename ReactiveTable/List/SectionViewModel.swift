@@ -8,10 +8,23 @@
 
 import Foundation
 import DifferenceKit
+import ReactiveSwift
+
+protocol SectionViewModelDelegate {
+    func addNewCellButtonTapped()
+}
 
 class SectionViewModel {
     
+    var delegate: SectionViewModelDelegate?
+    
+    var sectionTitle = MutableProperty<String?>(nil)
+    
     let id = UUID().uuidString
+    
+    func addNewCellButtonTapped() {
+        self.delegate?.addNewCellButtonTapped()
+    }
     
 }
 

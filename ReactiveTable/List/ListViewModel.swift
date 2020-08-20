@@ -10,11 +10,17 @@ import Foundation
 import ReactiveSwift
 import DifferenceKit
 
+protocol ListViewModelDelegate {
+    func addNewCellToTable()
+}
+
 typealias SectionType = ArraySection<SectionViewModel, CellViewModel>
 
 class ListViewModel {
     
     // MARK: - Stored variables
+    var delegate: ListViewModelDelegate?
+    
     let sectionsNotEmpty = MutableProperty<Bool>(false) // Cuarto
     
     let changeset = MutableProperty(StagedChangeset<[SectionType]>()) // Tercero
@@ -30,6 +36,16 @@ class ListViewModel {
     }
     
     // MARK: - Methods
+    func addNewCollectionCell() {
+        print("Add new collection cell")
+    }
+    
+    func addNewSimpleCell() {
+        let simpleCellViewModel = SimpleCellViewModel()
+        simpleCellViewModel.idLabelText.value = sections.value
+        
+    }
+    
     func setupBindings() {
         let sectionsArrayIsNotEmpty = sections.map { !$0.isEmpty }
         sectionsNotEmpty <~ sectionsArrayIsNotEmpty
@@ -45,7 +61,10 @@ class ListViewModel {
     
     func addSectionButtonTapped(){
         var mutableSections = sections.value
-        mutableSections.append(SectionType(model: SectionViewModel(), elements: [EmptyCellViewModel()]))
+        let sectionViewModel = SectionViewModel()
+        sectionViewModel.delegate = self
+        sectionViewModel.sectionTitle.value = "Section \(sections.value.count + 1)"
+        mutableSections.append(SectionType(model: sectionViewModel, elements: [EmptyCellViewModel()]))
         
         updateChangeset(sections: mutableSections)
     }
@@ -66,5 +85,11 @@ class ListViewModel {
     
     func viewModel(at indexPath: IndexPath) -> CellViewModel {
         return sections.value[indexPath.section].elements[indexPath.row]
+    }
+}
+
+extension ListViewModel: SectionViewModelDelegate {
+    func addNewCellButtonTapped() {
+        self.delegate?.addNewCellToTable()
     }
 }

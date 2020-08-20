@@ -14,6 +14,7 @@ import DifferenceKit
 
 class ListViewController: UIViewController {
     
+    // MARK: - Stored variables
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.register(SectionView.self, forHeaderFooterViewReuseIdentifier: "SectionView")
@@ -46,16 +47,20 @@ class ListViewController: UIViewController {
     let compositeDisposable: CompositeDisposable
     
     let viewModel: ListViewModel
+    
+    // MARK: - Init
     init(viewModel: ListViewModel, compositeDisposable: CompositeDisposable) {
         self.viewModel = viewModel
         self.compositeDisposable = compositeDisposable
         super.init(nibName: nil, bundle: nil)
+        viewModel.delegate = self
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life cycle methods
     override func loadView() {
         view = UIView()
         view.backgroundColor = .white
@@ -88,6 +93,19 @@ class ListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBindings()
+    }
+    
+    // MARK: - Private methods
+    private func showNewCellAlert() {
+        let alertController = UIAlertController(title: "New cell", message: "Please select desired option", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Simple cell", style: .default, handler: {[weak self] (_) in
+            self?.viewModel.addNewSimpleCell()
+        }))
+        alertController.addAction(UIAlertAction(title: "Collection cell", style: .default, handler: {[weak self] (_) in
+            self?.viewModel.addNewCollectionCell()
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
     
     private func setupBindings() {
@@ -139,5 +157,11 @@ extension ListViewController: UITableViewDataSource {
             return cell
         }
         fatalError()
+    }
+}
+
+extension ListViewController: ListViewModelDelegate {
+    func addNewCellToTable() {
+        showNewCellAlert()
     }
 }
