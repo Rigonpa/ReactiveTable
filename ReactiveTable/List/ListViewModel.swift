@@ -39,8 +39,37 @@ class ListViewModel {
     
     // MARK: - Methods
     func addNewCollectionCell() {
-        print("Add new collection cell")
+        guard let sectionIndex = sections.value.firstIndex(where: { $0.model === selectedSectionViewModel}) else { return}
+        
+        var mutableSectionsCopy = sections.value
+        
+        mutableSectionsCopy[sectionIndex].elements.removeAll(where: { $0 is EmptyCellViewModel})
+        
+        let collectionCellViewModel = CollectionCellViewModel()
+        
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     func addNewSimpleCell() {
         guard let sectionIndex = sections.value.firstIndex (where: { (eachSectionAlreadyInSections) -> Bool in
@@ -50,7 +79,6 @@ class ListViewModel {
         var mutableSectionsCopy = sections.value
         
         let simpleCellViewModel = SimpleCellViewModel()
-//        simpleCellViewModel.idLabelText.value = simpleCellViewModel.id
         
         mutableSectionsCopy[sectionIndex].elements.removeAll(where: { $0 is EmptyCellViewModel })
         
@@ -103,6 +131,13 @@ class ListViewModel {
 }
 
 extension ListViewModel: SectionViewModelDelegate {
+    func removeSectionButtonTapped(sectionViewModel: SectionViewModel) {
+        var mutableSectionsCopy = sections.value
+        mutableSectionsCopy.removeAll(where: { $0.model === sectionViewModel })
+        
+        updateChangeset(sections: mutableSectionsCopy)
+    }
+    
     func addNewCellButtonTapped(sectionViewModel: SectionViewModel) {
         selectedSectionViewModel = sectionViewModel
         self.delegate?.addNewCellToTable()

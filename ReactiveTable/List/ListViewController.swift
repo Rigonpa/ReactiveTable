@@ -20,6 +20,7 @@ class ListViewController: UIViewController {
         table.register(SectionView.self, forHeaderFooterViewReuseIdentifier: "SectionView")
         table.register(EmptyCell.self, forCellReuseIdentifier: "EmptyCell")
         table.register(SimpleCell.self, forCellReuseIdentifier: "SimpleCell")
+        table.register(CollectionCell.self, forCellReuseIdentifier: "CollectionCell")
         table.delegate = self
         table.dataSource = self
 //        table.dragDelegate = self
@@ -135,6 +136,13 @@ extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 54.0
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if viewModel.viewModel(at: indexPath) is CollectionCellViewModel {
+            return 80.0
+        }
+        return 54.0
+    }
 }
 
 extension ListViewController: UITableViewDataSource {
@@ -153,6 +161,10 @@ extension ListViewController: UITableViewDataSource {
             return cell
         } else if let cell = tableView.dequeueReusableCell(withIdentifier: "SimpleCell", for: indexPath) as? SimpleCell,
             let cellViewModel = viewModel.viewModel(at: indexPath) as? SimpleCellViewModel {
+            cell.viewModel = cellViewModel
+            return cell
+        } else if let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionCell", for: indexPath) as? CollectionCell,
+            let cellViewModel = viewModel.viewModel(at: indexPath) as? CollectionCellViewModel {
             cell.viewModel = cellViewModel
             return cell
         }

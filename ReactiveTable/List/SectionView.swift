@@ -55,6 +55,10 @@ class SectionView: UITableViewHeaderFooterView {
         guard let viewModel = viewModel else { return }
         compositeDisposable += titleSection.reactive.text <~ viewModel.sectionTitle
         
+        compositeDisposable += removeSectionButton.reactive.controlEvents(.touchUpInside).observe {[weak self] (_) in
+            self?.viewModel?.removeSectionButtonTapped()
+        }
+        
         compositeDisposable += addCellButton.reactive.controlEvents(.touchUpInside).observe{[weak self] (_) in
             self?.viewModel?.addNewCellButtonTapped()
         }

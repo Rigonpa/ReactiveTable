@@ -16,24 +16,13 @@ class SimpleCell: UITableViewCell {
         return label
     }()
     
-//    let serialDisposable = SerialDisposable()
-    
     var viewModel: SimpleCellViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
             idLabel.text = viewModel.id
-//            let compositeDisposable = CompositeDisposable()
-//            serialDisposable.inner = compositeDisposable
-//
-//            setupBindings(compositeDisposable: compositeDisposable)
             updateUI()
         }
     }
-    
-//    private func setupBindings(compositeDisposable: CompositeDisposable) {
-//        guard let viewModel = viewModel else { return }
-//        compositeDisposable += idLabel.reactive.text <~ viewModel.idLabelText
-//    }
     
     private func updateUI() {
         contentView.backgroundColor = .cyan
@@ -43,8 +32,4 @@ class SimpleCell: UITableViewCell {
             make.centerY.equalTo(snp.centerY)
         }
     }
-    
-//    deinit {
-//        serialDisposable.dispose()
-//    }
 }

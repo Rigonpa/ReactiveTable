@@ -21,6 +21,10 @@
 		93D0635424ED46B300561665 /* SimpleCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D0635324ED46B300561665 /* SimpleCellViewModel.swift */; };
 		93D0635624ED46C700561665 /* SimpleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D0635524ED46C700561665 /* SimpleCell.swift */; };
 		93D0635824ED46D100561665 /* EmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D0635724ED46D100561665 /* EmptyCell.swift */; };
+		93DB7D6E24EEDE910090B659 /* CollectionCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DB7D6D24EEDE910090B659 /* CollectionCellViewModel.swift */; };
+		93DB7D7024EEDEA10090B659 /* CollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DB7D6F24EEDEA10090B659 /* CollectionCell.swift */; };
+		93DB7D7224EEDEAD0090B659 /* ItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DB7D7124EEDEAD0090B659 /* ItemViewModel.swift */; };
+		93DB7D7424EEDEB60090B659 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DB7D7324EEDEB60090B659 /* Item.swift */; };
 		95FED0FD9BAC34683037D935 /* Pods_ReactiveTable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA09A17025E60B9F3DFD15B1 /* Pods_ReactiveTable.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +46,10 @@
 		93D0635324ED46B300561665 /* SimpleCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleCellViewModel.swift; sourceTree = "<group>"; };
 		93D0635524ED46C700561665 /* SimpleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleCell.swift; sourceTree = "<group>"; };
 		93D0635724ED46D100561665 /* EmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyCell.swift; sourceTree = "<group>"; };
+		93DB7D6D24EEDE910090B659 /* CollectionCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionCellViewModel.swift; sourceTree = "<group>"; };
+		93DB7D6F24EEDEA10090B659 /* CollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionCell.swift; sourceTree = "<group>"; };
+		93DB7D7124EEDEAD0090B659 /* ItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewModel.swift; sourceTree = "<group>"; };
+		93DB7D7324EEDEB60090B659 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		9ECF036C026D73D307457F02 /* Pods-ReactiveTable.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactiveTable.release.xcconfig"; path = "Target Support Files/Pods-ReactiveTable/Pods-ReactiveTable.release.xcconfig"; sourceTree = "<group>"; };
 		FA09A17025E60B9F3DFD15B1 /* Pods_ReactiveTable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactiveTable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -107,6 +115,10 @@
 				93D0635724ED46D100561665 /* EmptyCell.swift */,
 				93D0635324ED46B300561665 /* SimpleCellViewModel.swift */,
 				93D0635524ED46C700561665 /* SimpleCell.swift */,
+				93DB7D6D24EEDE910090B659 /* CollectionCellViewModel.swift */,
+				93DB7D6F24EEDEA10090B659 /* CollectionCell.swift */,
+				93DB7D7124EEDEAD0090B659 /* ItemViewModel.swift */,
+				93DB7D7324EEDEB60090B659 /* Item.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -262,17 +274,21 @@
 			files = (
 				930C070624ED2A1600522BC6 /* AppCoordinator.swift in Sources */,
 				930C06E724ED1FA400522BC6 /* AppDelegate.swift in Sources */,
+				93DB7D7424EEDEB60090B659 /* Item.swift in Sources */,
 				93D0635024ED468900561665 /* SectionView.swift in Sources */,
 				93D0634E24ED467D00561665 /* SectionViewModel.swift in Sources */,
 				930C06E924ED1FA400522BC6 /* SceneDelegate.swift in Sources */,
 				93D0635624ED46C700561665 /* SimpleCell.swift in Sources */,
+				93DB7D6E24EEDE910090B659 /* CollectionCellViewModel.swift in Sources */,
 				93D0635824ED46D100561665 /* EmptyCell.swift in Sources */,
 				93D0634C24ED467000561665 /* CellViewModel.swift in Sources */,
+				93DB7D7224EEDEAD0090B659 /* ItemViewModel.swift in Sources */,
 				93D0635224ED469700561665 /* EmptyCellViewModel.swift in Sources */,
 				93D0635424ED46B300561665 /* SimpleCellViewModel.swift in Sources */,
 				930C070424ED263E00522BC6 /* Coordinator.swift in Sources */,
 				930C070024ED244600522BC6 /* ListViewController.swift in Sources */,
 				930C06FE24ED243700522BC6 /* ListViewModel.swift in Sources */,
+				93DB7D7024EEDEA10090B659 /* CollectionCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,13 +12,22 @@ class EmptyCell: UITableViewCell {
     
     lazy var emptyLabel: UILabel = {
         let label = UILabel()
-        label.text = "Add new cell by tapping above plus button"
+        label.text = "Add new cell by pressing plus button"
         return label
     }()
     
     var viewModel: EmptyCellViewModel? {
         didSet {
-            contentView.backgroundColor = .orange
+            updateUI()
+        }
+    }
+    
+    private func updateUI() {
+        contentView.backgroundColor = .orange
+        addSubview(emptyLabel)
+        emptyLabel.snp.remakeConstraints { make in
+            make.leading.equalTo(snp.leading).offset(32)
+            make.centerY.equalTo(snp.centerY)
         }
     }
 }

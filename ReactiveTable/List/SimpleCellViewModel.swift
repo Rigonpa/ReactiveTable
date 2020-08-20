@@ -10,5 +10,5 @@ import Foundation
 import ReactiveSwift
 
 class SimpleCellViewModel: CellViewModel {
-//    var idLabelText = MutableProperty<String?>(nil)
+    
 }
