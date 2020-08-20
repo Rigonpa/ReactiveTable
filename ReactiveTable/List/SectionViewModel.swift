@@ -11,7 +11,7 @@ import DifferenceKit
 import ReactiveSwift
 
 protocol SectionViewModelDelegate {
-    func addNewCellButtonTapped()
+    func addNewCellButtonTapped(id: String)
 }
 
 class SectionViewModel {
@@ -23,7 +23,7 @@ class SectionViewModel {
     let id = UUID().uuidString
     
     func addNewCellButtonTapped() {
-        self.delegate?.addNewCellButtonTapped()
+        self.delegate?.addNewCellButtonTapped(id: id)
     }
     
 }
@@ -38,4 +38,10 @@ extension SectionViewModel: Differentiable {
     }
     
     typealias DifferenceIdentifier = String
+}
+
+extension SectionViewModel: Equatable {
+    static func == (lhs: SectionViewModel, rhs: SectionViewModel) -> Bool {
+        return lhs === rhs
+    }
 }

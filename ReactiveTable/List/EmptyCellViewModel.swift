@@ -7,7 +7,10 @@
 //
 
 import Foundation
+import ReactiveSwift
 
 class EmptyCellViewModel: CellViewModel {
+    
+    var emptySection = MutableProperty<Bool>(false)
     
 }

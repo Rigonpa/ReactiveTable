@@ -10,6 +10,12 @@ import UIKit
 
 class EmptyCell: UITableViewCell {
     
+    lazy var emptyLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Add new cell by tapping above plus button"
+        return label
+    }()
+    
     var viewModel: EmptyCellViewModel? {
         didSet {
             contentView.backgroundColor = .orange

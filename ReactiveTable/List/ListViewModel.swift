@@ -19,7 +19,9 @@ typealias SectionType = ArraySection<SectionViewModel, CellViewModel>
 class ListViewModel {
     
     // MARK: - Stored variables
-    var delegate: ListViewModelDelegate?
+    var selectedSectionViewModelId: String? // Sexto
+    
+    var delegate: ListViewModelDelegate? // Quinto
     
     let sectionsNotEmpty = MutableProperty<Bool>(false) // Cuarto
     
@@ -41,8 +43,24 @@ class ListViewModel {
     }
     
     func addNewSimpleCell() {
+        let sectionIndex = sections.value.firstIndex { (eachSectionAlreadyInSections) -> Bool in
+            eachSectionAlreadyInSections.model.id == selectedSectionViewModelId
+        }
+        guard let sectionIndex1 = sectionIndex else { return }
+        
+        
+        var mutableSectionsCopy = sections.value
+        
         let simpleCellViewModel = SimpleCellViewModel()
-        simpleCellViewModel.idLabelText.value = sections.value
+        simpleCellViewModel.idLabelText.value = simpleCellViewModel.id
+        
+        if(mutableSectionsCopy[sectionIndex1].elements.first is EmptyCellViewModel) {
+            mutableSectionsCopy[sectionIndex1].elements.removeAll()
+        }
+        
+        mutableSectionsCopy[sectionIndex1].elements.append(simpleCellViewModel)
+        
+        updateChangeset(sections: mutableSectionsCopy)
         
     }
     
@@ -89,7 +107,8 @@ class ListViewModel {
 }
 
 extension ListViewModel: SectionViewModelDelegate {
-    func addNewCellButtonTapped() {
+    func addNewCellButtonTapped(id: String) {
+        selectedSectionViewModelId = id
         self.delegate?.addNewCellToTable()
     }
 }
