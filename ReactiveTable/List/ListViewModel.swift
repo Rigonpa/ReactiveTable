@@ -46,30 +46,10 @@ class ListViewModel {
         mutableSectionsCopy[sectionIndex].elements.removeAll(where: { $0 is EmptyCellViewModel})
         
         let collectionCellViewModel = CollectionCellViewModel()
+        mutableSectionsCopy[sectionIndex].elements.append(collectionCellViewModel)
         
+        updateChangeset(sections: mutableSectionsCopy)
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     func addNewSimpleCell() {
         guard let sectionIndex = sections.value.firstIndex (where: { (eachSectionAlreadyInSections) -> Bool in

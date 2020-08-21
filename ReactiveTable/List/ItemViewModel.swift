@@ -7,7 +7,32 @@
 //
 
 import Foundation
+import DifferenceKit
+
+protocol ItemViewModelDelegate {
+    func removeItemButtonPressed(itemViewModel: ItemViewModel)
+}
 
 class ItemViewModel {
     
+    var delegate: ItemViewModelDelegate?
+    
+    let id = UUID().uuidString
+    
+    func removeItemButtonTapped() {
+        self.delegate?.removeItemButtonPressed(itemViewModel: self)
+    }
+    
+}
+
+extension ItemViewModel: Differentiable {
+    var differenceIdentifier: String {
+        return id
+    }
+    
+    func isContentEqual(to source: ItemViewModel) -> Bool {
+        return id == source.id
+    }
+    
+    typealias DifferenceIdentifier = String
 }

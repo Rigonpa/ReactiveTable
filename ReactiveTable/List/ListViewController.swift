@@ -136,13 +136,6 @@ extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 54.0
     }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if viewModel.viewModel(at: indexPath) is CollectionCellViewModel {
-            return 80.0
-        }
-        return 54.0
-    }
 }
 
 extension ListViewController: UITableViewDataSource {
