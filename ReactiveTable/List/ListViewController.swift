@@ -143,6 +143,15 @@ extension ListViewController: UITableViewDataSource {
         return viewModel.numberOfSections()
     }
     
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard viewModel.canRemoveRow(at: indexPath)  else { return nil }
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete", handler: {[weak self] _,_,_ in
+            self?.viewModel.removeCell(at: indexPath)
+        })
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.numberOfRows(at: section)
     }

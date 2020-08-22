@@ -38,6 +38,17 @@ class ListViewModel {
     }
     
     // MARK: - Methods
+    func removeCell(at indexPath: IndexPath) {
+        var mutableSectionsCopy = sections.value
+        mutableSectionsCopy[indexPath.section].elements.remove(at: indexPath.row)
+        
+        updateChangeset(sections: mutableSectionsCopy)
+    }
+    
+    func canRemoveRow(at indexPath: IndexPath) -> Bool {
+        return !(sections.value[indexPath.section].elements[indexPath.row] is EmptyCellViewModel)
+    }
+    
     func addNewCollectionCell() {
         guard let sectionIndex = sections.value.firstIndex(where: { $0.model === selectedSectionViewModel}) else { return}
         
