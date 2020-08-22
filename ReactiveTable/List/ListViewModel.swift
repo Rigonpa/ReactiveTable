@@ -38,9 +38,57 @@ class ListViewModel {
     }
     
     // MARK: - Methods
+    func canMoveRow(at indexPath: IndexPath) -> Bool {
+        return !(sections.value[indexPath.section].elements[indexPath.row] is EmptyCellViewModel)
+    }
+    
+    func moveRow(at sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        var mutableSectionsCopy = sections.value
+        
+        let sourceElement = mutableSectionsCopy[sourceIndexPath.section].elements.remove(at: sourceIndexPath.row)
+        
+        if mutableSectionsCopy[sourceIndexPath.section].elements.isEmpty {
+            mutableSectionsCopy[sourceIndexPath.section].elements.append(EmptyCellViewModel())
+        }
+        
+        mutableSectionsCopy[destinationIndexPath.section].elements.insert(sourceElement, at: destinationIndexPath.row)
+        
+        updateChangeset(sections: mutableSectionsCopy)
+    }
+    
+    func hasEmptyCell(at indexPath: IndexPath) -> Bool {
+        return sections.value[indexPath.section].elements.contains(where: { $0 is EmptyCellViewModel })
+    }
+    
+    func performDrop(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {
+        var mutableSectionsCopy = sections.value
+        let cellViewModel = mutableSectionsCopy[sourceIndexPath.section].elements[sourceIndexPath.row]
+        mutableSectionsCopy[sourceIndexPath.section].elements.remove(at: sourceIndexPath.row)
+        
+        if mutableSectionsCopy[sourceIndexPath.section].elements.isEmpty {
+            mutableSectionsCopy[sourceIndexPath.section].elements.append(EmptyCellViewModel())
+        }
+        
+        mutableSectionsCopy[destinationIndexPath.section].elements.removeAll()
+        mutableSectionsCopy[destinationIndexPath.section].elements.append(cellViewModel)
+//        mutableSectionsCopy[destinationIndexPath.section].elements.insert(cellViewModel, at: destinationIndexPath.row)
+        
+        updateChangeset(sections: mutableSectionsCopy)
+    }
+    
+    func canDragRow(at indexPath: IndexPath) -> Bool {
+        return !(sections.value[indexPath.section].elements[indexPath.row] is EmptyCellViewModel)
+    }
+    
     func removeCell(at indexPath: IndexPath) {
         var mutableSectionsCopy = sections.value
         mutableSectionsCopy[indexPath.section].elements.remove(at: indexPath.row)
+        
+        if(mutableSectionsCopy[indexPath.section].elements.isEmpty) {
+            let emptyCellViewModel = EmptyCellViewModel()
+            mutableSectionsCopy[indexPath.section].elements.append(emptyCellViewModel)
+        }
         
         updateChangeset(sections: mutableSectionsCopy)
     }

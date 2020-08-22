@@ -16,15 +16,17 @@ class ListViewController: UIViewController {
     
     // MARK: - Stored variables
     lazy var tableView: UITableView = {
-        let table = UITableView()
+        let table = UITableView(frame: .zero, style: .grouped)
         table.register(SectionView.self, forHeaderFooterViewReuseIdentifier: "SectionView")
         table.register(EmptyCell.self, forCellReuseIdentifier: "EmptyCell")
         table.register(SimpleCell.self, forCellReuseIdentifier: "SimpleCell")
         table.register(CollectionCell.self, forCellReuseIdentifier: "CollectionCell")
         table.delegate = self
         table.dataSource = self
-//        table.dragDelegate = self
-//        table.dropDelegate = self
+        
+        table.dropDelegate = self
+        table.dragDelegate = self
+        table.dragInteractionEnabled = true
         table.tableFooterView = UIView()
         return table
     }()
@@ -117,7 +119,7 @@ class ListViewController: UIViewController {
         }
         
         compositeDisposable += emptyLabel.reactive.isHidden <~ viewModel.sectionsNotEmpty // Tercero
-            
+        
         compositeDisposable += addButton.reactive.controlEvents(.touchUpInside).observe { [weak self] (_) in // Primero
             guard let self = self else { return }
             self.viewModel.addSectionButtonTapped()
@@ -125,7 +127,52 @@ class ListViewController: UIViewController {
     }
 }
 
+extension ListViewController: UITableViewDropDelegate {
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        guard let sourceIndexPath = coordinator.items.first?.sourceIndexPath,
+            let destinationIndexPath = coordinator.destinationIndexPath else { return }
+        
+        viewModel.performDrop(sourceIndexPath: sourceIndexPath, destinationIndexPath: destinationIndexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        guard let destinationIndexPath = destinationIndexPath,
+            let sourceIndexPath = session.localDragSession?.localContext as? IndexPath else {
+                return UITableViewDropProposal(operation: .forbidden)
+        }
+        // Use insert INTO when the destinationIndexPath is an empty cell -> This will cause performDrop to trigger
+        if viewModel.hasEmptyCell(at: destinationIndexPath) {
+            return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
+        }
+        
+        // Use insert AT when the dragging from a section and dropping on another, OR
+        // when drag and droppping within the same section but there are more 1 element
+        if(sourceIndexPath.section == destinationIndexPath.section
+            && viewModel.numberOfRows(at: destinationIndexPath.section) > 1)
+            || sourceIndexPath.section != destinationIndexPath.section {
+            return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+        
+        return UITableViewDropProposal(operation: .forbidden)
+    }
+}
+
+extension ListViewController: UITableViewDragDelegate {
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        session.localContext = indexPath
+        return []
+    }
+}
+
 extension ListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return viewModel.canMoveRow(at: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        viewModel.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let sectionView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SectionView") as? SectionView,
             let sectionViewModel = viewModel.sectionViewModel(at: section) else { return nil }
